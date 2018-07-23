@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!-- 提供方信息-->
+    <dubbo:application name="dubbo-server"/>
+    <!-- 注册中心-->
+    <!--<dubbo:registry address="N/A"/>-->
+    <dubbo:registry address="zookeeper://192.168.131.130:2181"/>
+
+  <!--  <dubbo:protocol name="dubbo" port="20880"/>-->
+    <dubbo:protocol name="dubbo" port="28080"/>
+    <dubbo:protocol name="hessian" port="8080"/>
+
+    <dubbo:service interface="com.vip.dubbo.IHello" ref="iHello" protocol="dubbo" version ="1.0.0"/>
+
+    <dubbo:service interface="com.vip.dubbo.IHello" ref="iHelloV2" protocol="dubbo" version ="1.0.1"/>
+
+    <dubbo:service interface="com.vip.dubbo.IDemoService" ref="demoService" protocol="dubbo" />
+
+    <bean id="iHello" class="com.vip.dubbo.IHelloImpl"/>
+    <bean id="demoService" class="com.vip.dubbo.DemoServiceImpl" />
+
+
+    <!-- 多版本支持 -->
+    <bean id="iHelloV2" class="com.vip.dubbo.IHelloImplV2"/>
+</beans>
