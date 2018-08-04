@@ -6,6 +6,7 @@ import com.vip.spring.formework.annotation.Autowired;
 import com.vip.spring.formework.annotation.Controller;
 import com.vip.spring.formework.annotation.RequestMapping;
 import com.vip.spring.formework.annotation.RequestParam;
+import com.vip.spring.formework.webmvc.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ public class DemoAction {
     private IDemoService demoService;
 
     @RequestMapping("/test")
-    public void test(
+    public ModelAndView test(
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestParam("name") String name) {
@@ -30,5 +31,6 @@ public class DemoAction {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
+        return null;
     }
 }

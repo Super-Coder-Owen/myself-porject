@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -62,7 +63,7 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
         }
 
         for (Map.Entry<String, BeanWrapper> entry : this.beanWrapperMap.entrySet()) {
-           populateBean(entry.getKey(),entry.getValue().getWrappedInstance());
+            populateBean(entry.getKey(), entry.getValue().getWrappedInstance());
         }
     }
 
@@ -119,7 +120,7 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
 
             // 在实例初始化之后调用一次
             beanPostProcessor.postProcessAfterInitialization(instance, beanName);
-            
+
             // populateBean(beanName, instance);
 
             return this.beanWrapperMap.get(beanName).getWrappedInstance();
@@ -174,4 +175,17 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
         }
     }
 
+
+    public String[] getBeanDefinitionNames() {
+        return this.beanDefinitionMap.keySet().toArray(new String[this.beanDefinitionMap.size()]);
+    }
+
+
+    public int getBeanDefinitionCount() {
+        return this.beanDefinitionMap.size();
+    }
+
+    public Properties getConfigContext() {
+        return reader.getContextConfig();
+    }
 }
