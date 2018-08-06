@@ -39,14 +39,18 @@ public class DispatcherServlet extends HttpServlet {
     private List<ViewResolver> viewResolvers = new ArrayList<>();
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(config.getInitParameter("contextConfigLocation").replace("classpath:", ""));
 
         // 初始化
-        initStrategies(context);
+        try {
+            initStrategies(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void initStrategies(ClassPathXmlApplicationContext context) {
+    private void initStrategies(ClassPathXmlApplicationContext context) throws Exception {
         initMultipartResolver(context);
         initLocaleResolver(context);
         initThemeResolver(context);
@@ -65,22 +69,24 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         this.doPost(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         try {
             doDispatch(req, resp);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws IOException, InvocationTargetException, IllegalAccessException {
+    private void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // 根据用户请求获取一个handler
         HandlerMapping hm = getHandler(req);
         if (null == hm) {
@@ -95,7 +101,7 @@ public class DispatcherServlet extends HttpServlet {
         processDispatchResult(resp, mv);
     }
 
-    private void processDispatchResult(HttpServletResponse resp, ModelAndView mv) throws IOException {
+    private void processDispatchResult(HttpServletResponse resp, ModelAndView mv) throws Exception {
         if (null == mv) {
             return;
         }
@@ -167,7 +173,7 @@ public class DispatcherServlet extends HttpServlet {
                     continue;
                 }
                 RequestMapping rm = method.getAnnotation(RequestMapping.class);
-                String regex = ("/" + baseUrl + rm.value()).replaceAll("/+", "");
+                String regex = ("/" + baseUrl + rm.value().replaceAll("\\*", ".*")).replaceAll("/+", "/");
                 Pattern pattern = Pattern.compile(regex);
                 this.handlerMappings.add(new HandlerMapping(pattern, instance, method));
                 System.out.println("Mapping->" + regex + ",method->" + method);
@@ -212,7 +218,7 @@ public class DispatcherServlet extends HttpServlet {
 
     }
 
-    private void initViewResolvers(ClassPathXmlApplicationContext context) {
+    private void initViewResolvers(ClassPathXmlApplicationContext context) throws Exception {
         // 在页面输入http://localhost/first.html
         // 解决页面名字和模板文件关联的问题
         String templateRoot = context.getConfigContext().getProperty("templateRoot");

@@ -25,7 +25,7 @@ public class HandlerAdapter {
         // 构造实参列表
         Object[] paramValues = new Object[paramTypes.length];
         for (Map.Entry<String, String[]> reqParamMapEntry : reqParamMap.entrySet()) {
-            String value = Arrays.toString(reqParamMapEntry.getValue()).replaceAll("\\[|\\]", "").replaceAll("\\s", ",");
+            String value = Arrays.toString(reqParamMapEntry.getValue()).replaceAll("\\[|\\]", "").replaceAll("\\s", "");
             if (!this.paramMapping.containsKey(reqParamMapEntry.getKey())) {
                 continue;
             }
@@ -35,11 +35,15 @@ public class HandlerAdapter {
             paramValues[index] = caseStringValue(value, paramTypes[index]);
         }
 
-        int reqIndex = this.paramMapping.get(HttpServletRequest.class.getName());
-        paramValues[reqIndex] = req;
+        if (this.paramMapping.containsKey(HttpServletRequest.class.getName())) {
+            int reqIndex = this.paramMapping.get(HttpServletRequest.class.getName());
+            paramValues[reqIndex] = req;
+        }
 
-        int respIndex = this.paramMapping.get(HttpServletResponse.class.getName());
-        paramValues[respIndex] = resp;
+        if (this.paramMapping.containsKey(HttpServletResponse.class.getName())) {
+            int respIndex = this.paramMapping.get(HttpServletResponse.class.getName());
+            paramValues[respIndex] = resp;
+        }
 
         Object result = hm.getMethod().invoke(hm.getController(), paramValues);
         if (null != result) {
