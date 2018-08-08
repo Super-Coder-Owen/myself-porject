@@ -19,14 +19,18 @@ public class AopProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (this.aopConfig.contains(method)) {
-            AopConfig.Aspect aspect = this.aopConfig.get(method);
-            aspect.getPoints()[0].invoke(aspect);
+        // 原生方法
+        Method m = this.targetObj.getClass().getMethod(method.getName(), method.getParameterTypes());
+
+        // 通过原生方法去找
+        if (this.aopConfig.contains(m)) {
+            AopConfig.Aspect aspect = this.aopConfig.get(m);
+            aspect.getPoints()[0].invoke(aspect.getAspect());
         }
         Object object = method.invoke(this.targetObj, args);
-        if (this.aopConfig.contains(method)) {
-            AopConfig.Aspect aspect = this.aopConfig.get(method);
-            aspect.getPoints()[1].invoke(aspect);
+        if (this.aopConfig.contains(m)) {
+            AopConfig.Aspect aspect = this.aopConfig.get(m);
+            aspect.getPoints()[1].invoke(aspect.getAspect());
         }
         return object;
     }

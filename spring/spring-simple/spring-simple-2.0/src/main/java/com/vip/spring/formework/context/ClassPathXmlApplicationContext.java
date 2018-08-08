@@ -204,6 +204,8 @@ public class ClassPathXmlApplicationContext extends DefaultListableBeanFactory i
         Pattern pattern = Pattern.compile(expression);
 
         Class<?> aspectClazz = Class.forName(before[0]);
+
+        // 这里得到的是原生的方法
         for (Method m : clazz.getMethods()) {
             Matcher matcher = pattern.matcher(m.toString());
             if (matcher.matches()) {
