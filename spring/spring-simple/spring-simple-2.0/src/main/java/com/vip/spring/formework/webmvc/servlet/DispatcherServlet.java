@@ -3,6 +3,7 @@ package com.vip.spring.formework.webmvc.servlet;
 import com.vip.spring.formework.annotation.Controller;
 import com.vip.spring.formework.annotation.RequestMapping;
 import com.vip.spring.formework.annotation.RequestParam;
+import com.vip.spring.formework.aop.AopProxyUtils;
 import com.vip.spring.formework.context.ClassPathXmlApplicationContext;
 import com.vip.spring.formework.webmvc.HandlerAdapter;
 import com.vip.spring.formework.webmvc.HandlerMapping;
@@ -69,12 +70,12 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doPost(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             doDispatch(req, resp);
         } catch (InvocationTargetException e) {
@@ -151,11 +152,12 @@ public class DispatcherServlet extends HttpServlet {
      *
      * @param context
      */
-    private void initHandlerMappings(ClassPathXmlApplicationContext context) {
+    private void initHandlerMappings(ClassPathXmlApplicationContext context) throws Exception {
         // 从容器中取得所有实例
         String[] beanNames = context.getBeanDefinitionNames();
         for (String beanName : beanNames) {
-            Object instance = context.getBean(beanName);
+            Object proxy = context.getBean(beanName);
+            Object instance = AopProxyUtils.getTargetObject(proxy);
             Class<?> clazz = instance.getClass();
             if (!clazz.isAnnotationPresent(Controller.class)) {
                 continue;

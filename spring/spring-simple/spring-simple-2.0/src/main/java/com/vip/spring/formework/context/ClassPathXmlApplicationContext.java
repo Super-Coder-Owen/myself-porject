@@ -3,6 +3,7 @@ package com.vip.spring.formework.context;
 import com.vip.spring.formework.annotation.Autowired;
 import com.vip.spring.formework.annotation.Controller;
 import com.vip.spring.formework.annotation.Service;
+import com.vip.spring.formework.aop.AopConfig;
 import com.vip.spring.formework.beans.BeanDefinition;
 import com.vip.spring.formework.beans.BeanPostProcessor;
 import com.vip.spring.formework.beans.BeanWrapper;
@@ -10,22 +11,24 @@ import com.vip.spring.formework.context.support.XmlBeanDefinitionReader;
 import com.vip.spring.formework.core.BeanFactory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  */
-public class ClassPathXmlApplicationContext implements BeanFactory {
+public class ClassPathXmlApplicationContext extends DefaultListableBeanFactory implements BeanFactory {
 
     private String[] configLocations;
 
     private XmlBeanDefinitionReader reader;
 
-    private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
     // 保证注册式单例容器
     private Map<String, Object> beanCacheMap = new HashMap<>();
@@ -58,12 +61,13 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
         for (Map.Entry<String, BeanDefinition> entry : this.beanDefinitionMap.entrySet()) {
             String beanName = entry.getKey();
             if (!entry.getValue().getLazyInit()) {
-                getBean(beanName);
+               Object obj = getBean(beanName);
+                System.err.println(obj.getClass());
             }
         }
 
         for (Map.Entry<String, BeanWrapper> entry : this.beanWrapperMap.entrySet()) {
-            populateBean(entry.getKey(), entry.getValue().getWrappedInstance());
+            populateBean(entry.getKey(), entry.getValue().getOriginalInstance());
         }
     }
 
@@ -115,6 +119,7 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
             beanPostProcessor.postProcessBeforeInitialization(instance, beanName);
 
             BeanWrapper beanWrapper = new BeanWrapper(instance);
+            beanWrapper.setAopConfig(instanceAopConfig(beanDefinition));
             beanWrapper.setBeanPostProcessor(beanPostProcessor);
             this.beanWrapperMap.put(beanName, beanWrapper);
 
@@ -187,5 +192,25 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
 
     public Properties getConfigContext() {
         return reader.getContextConfig();
+    }
+
+    private AopConfig instanceAopConfig(BeanDefinition beanDefinition) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+        AopConfig config = new AopConfig();
+        String expression = this.reader.getContextConfig().getProperty("point.cut");
+        String[] before = this.reader.getContextConfig().getProperty("aspectBefore").split("\\s");
+        String[] after = this.reader.getContextConfig().getProperty("aspectAfter").split("\\s");
+        String className = beanDefinition.getBeanClassName();
+        Class<?> clazz = Class.forName(className);
+        Pattern pattern = Pattern.compile(expression);
+
+        Class<?> aspectClazz = Class.forName(before[0]);
+        for (Method m : clazz.getMethods()) {
+            Matcher matcher = pattern.matcher(m.toString());
+            if (matcher.matches()) {
+                config.put(m, aspectClazz.newInstance(), new Method[]{aspectClazz.getMethod(before[1]), aspectClazz.getMethod(after[1])});
+            }
+        }
+
+        return config;
     }
 }
