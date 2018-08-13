@@ -1,4 +1,4 @@
-package com.vip.chapter1.thread.interrupt;
+package com.vip.chapter1.thread.stop;
 
 import java.util.concurrent.TimeUnit;
 
