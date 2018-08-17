@@ -1,5 +1,7 @@
 import com.spring.orm.base.demo.dao.GoodsDao;
+import com.spring.orm.base.demo.dao.UsersDao;
 import com.spring.orm.base.demo.model.Goods;
+import com.spring.orm.base.demo.model.Users;
 import com.spring.orm.base.framework.QueryRule;
 import com.spring.orm.extend.model.GoodsBean;
 import com.spring.orm.extend.springJdbc.SupportJdbcTemplate;
@@ -22,6 +24,8 @@ public class OrmTest {
     @Autowired
     GoodsDao goodsDao;
     @Autowired
+    UsersDao usersDao;
+    @Autowired
     SupportJdbcTemplate supportJdbcTemplate;
 
     @Test
@@ -43,6 +47,8 @@ public class OrmTest {
         System.out.println(Arrays.toString(list.toArray()));
         list = goodsDao.selectByName("鸡蛋");
         System.out.println(Arrays.toString(list.toArray()));
+        List<Users> userList = usersDao.selectAll();
+        System.out.println(Arrays.toString(userList.toArray()));
     }
 
 
