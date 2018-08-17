@@ -11,6 +11,7 @@
     <modules>
         <module>spring-simple-1.0</module>
         <module>spring-simple-2.0</module>
+        <module>spring-simple-orm</module>
     </modules>
     <dependencyManagement>
         <dependencies>
