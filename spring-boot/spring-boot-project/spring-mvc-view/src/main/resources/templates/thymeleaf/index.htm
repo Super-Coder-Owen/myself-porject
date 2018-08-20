@@ -11,8 +11,11 @@
 
 <body>
 
-<p th:text="${message}">Welcome to our grocery store!</p>
+<p th:text="#{home.welcome}">Welcome to our grocery store!</p>
+<!-- strings 内置对象-->
 <p th:text="${!#strings.isEmpty(message)}">Message!</p>
+<!-- string 自定义对象-->
+<p th:text="${string.isNotBlack(message)?message:'not content'}">Message!!!!!</p>
 </body>
 
 </html>
