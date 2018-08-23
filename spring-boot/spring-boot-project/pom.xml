@@ -10,7 +10,8 @@
 		<module>spring-application</module>
         <module>first-spring-boot-app</module>
 		<module>spring-mvc-view</module>
-	</modules>
+        <module>spring-mvc-rest</module>
+    </modules>
 	<packaging>pom</packaging>
 
 	<name>spring-boot-project</name>
