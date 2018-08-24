@@ -1,6 +1,5 @@
 package com.vip.mvc.controller;
 
-import com.vip.mvc.annotation.OptionsMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class CachedRestController {
-
     @RequestMapping("")
     @ResponseBody  // 没有缓存 -> 304
     // 服务端和客户端没有形成默契(状态码)
@@ -23,8 +21,7 @@ public class CachedRestController {
     }
 
 
-    @RequestMapping("/cache")
-    @OptionsMapping(name = "")
+    @RequestMapping("/cache") // Spring MVC 返回值处理
     public ResponseEntity<String> cache(
             @RequestParam(required = false, defaultValue = "false") boolean cached
     ) {
