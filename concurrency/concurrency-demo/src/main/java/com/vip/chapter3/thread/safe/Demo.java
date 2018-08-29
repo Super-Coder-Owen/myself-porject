@@ -1,4 +1,4 @@
-package com.vip.com.vip.chapter3.thread.safe;
+package com.vip.chapter3.thread.safe;
 
 /**
  *
