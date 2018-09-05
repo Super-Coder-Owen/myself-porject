@@ -11,6 +11,7 @@
         <module>first-spring-boot-app</module>
 		<module>spring-mvc-view</module>
         <module>spring-mvc-rest</module>
+        <module>spring-reactive</module>
     </modules>
 	<packaging>pom</packaging>
 
