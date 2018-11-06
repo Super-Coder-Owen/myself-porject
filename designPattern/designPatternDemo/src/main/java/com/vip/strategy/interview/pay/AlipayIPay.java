@@ -6,7 +6,7 @@ package com.vip.strategy.interview.pay;
  * @description
  * @since 2018/11/6.
  */
-public class AlipayPay implements PayStrategy{
+public class AlipayIPay implements IPayStrategy {
     @Override
     public void pay() {
         System.out.println("alipay pay...");

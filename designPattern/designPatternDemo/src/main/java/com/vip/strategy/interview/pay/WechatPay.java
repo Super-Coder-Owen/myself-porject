@@ -6,7 +6,7 @@ package com.vip.strategy.interview.pay;
  * @description
  * @since 2018/11/6.
  */
-public class WechatIPay implements IPayStrategy {
+public class WechatPay implements IPayStrategy {
     @Override
     public void pay() {
         System.out.println("wechat pay...");

@@ -7,6 +7,6 @@ package com.vip.strategy.interview.pay;
  * @description
  * @since 2018/11/6.
  */
-public interface PayStrategy {
+public interface IPayStrategy {
     void pay();
 }
