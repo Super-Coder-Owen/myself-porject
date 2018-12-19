@@ -108,4 +108,5 @@ Caused by: java.lang.ClassNotFoundException: com.mysql.jdbc.Driver
   2018-08-17 16:23:02 [INFO]-[com.alibaba.druid.pool.DruidDataSource] {dataSource-1} inited
   2018-08-17 16:29:22 [INFO]-[com.alibaba.druid.pool.DruidDataSource] {dataSource-1} inited
   2018-08-17 16:34:39 [INFO]-[com.alibaba.druid.pool.DruidDataSource] {dataSource-1} inited
+  2018-08-17 16:38:22 [INFO]-[com.alibaba.druid.pool.DruidDataSource] {dataSource-1} inited
   
